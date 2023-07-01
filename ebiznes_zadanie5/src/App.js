@@ -1,10 +1,20 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import Produkty from "./components/Produkty";
 import Koszyk from "./components/Koszyk";
 import Platnosci from "./components/Platnosci";
 
 function App() {
+  const [cart, setCart] = useState([]);
+
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+  };
+
+  const removeFromCart = (productToRemove) => {
+    setCart(cart.filter((product) => product !== productToRemove));
+  };
+
   return (
     <Router>
       <div>
@@ -23,8 +33,8 @@ function App() {
         </nav>
 
         <Routes>
-          <Route path="/produkty" element={<Produkty />} />
-          <Route path="/koszyk" element={<Koszyk />} />
+          <Route path="/produkty" element={<Produkty addToCart={addToCart} />} />
+          <Route path="/koszyk" element={<Koszyk cart={cart} removeFromCart={removeFromCart} />} />
           <Route path="/platnosci" element={<Platnosci />} />
         </Routes>
       </div>

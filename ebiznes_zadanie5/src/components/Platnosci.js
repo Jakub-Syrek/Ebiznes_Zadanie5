@@ -1,37 +1,37 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
 
 function Platnosci() {
-  const [danePlatnosci, setDanePlatnosci] = useState({
-    numerKarty: '',
-    dataWygasniecia: '',
-    cvv: '',
-  });
+  const [paymentData, setPaymentData] = useState({ name: "", amount: "" });
 
-  const zatwierdzPlatnosc = () => {
-    axios.post('http://localhost:3000/platnosci', danePlatnosci)
-      .then(res => {
-        console.log(res);
+  const handleInputChange = (event) => {
+    setPaymentData({ ...paymentData, [event.target.name]: event.target.value });
+  };
+
+  const handleFormSubmit = (event) => {
+    event.preventDefault();
+    axios.post('http://localhost:8080/api/payment', paymentData)
+      .then((response) => {
+        console.log(response.data);
       })
-      .catch(error => {
-        console.error(`Błąd podczas przetwarzania płatności: ${error}`);
+      .catch((error) => {
+        console.error(`There was an error making the payment: ${error}`);
       });
   };
 
   return (
     <div>
-      <h1>Płatności</h1>
-      <form onSubmit={zatwierdzPlatnosc}>
-        <label>Numer karty:
-          <input type="text" onChange={e => setDanePlatnosci({ ...danePlatnosci, numerKarty: e.target.value })} />
+      <h2>Płatności</h2>
+      <form onSubmit={handleFormSubmit}>
+        <label>
+          Imię i nazwisko:
+          <input type="text" name="name" onChange={handleInputChange} />
         </label>
-        <label>Data wygaśnięcia:
-          <input type="text" onChange={e => setDanePlatnosci({ ...danePlatnosci, dataWygasniecia: e.target.value })} />
+        <label>
+          Kwota do zapłaty:
+          <input type="text" name="amount" onChange={handleInputChange} />
         </label>
-        <label>CVV:
-          <input type="text" onChange={e => setDanePlatnosci({ ...danePlatnosci, cvv: e.target.value })} />
-        </label>
-        <button type="submit">Zapłać</button>
+        <input type="submit" value="Zapłać" />
       </form>
     </div>
   );

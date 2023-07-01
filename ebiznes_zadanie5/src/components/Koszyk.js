@@ -1,29 +1,20 @@
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
 
-function Koszyk() {
-  const [koszyk, setKoszyk] = useState([]);
-
-  const dodajDoKoszyka = (produkt) => {
-    setKoszyk([...koszyk, produkt]);
-    axios.post('http://localhost:3000/koszyk', produkt)
-      .then(res => {
-        console.log(res);
-      })
-      .catch(error => {
-        console.error(`Błąd podczas dodawania do koszyka: ${error}`);
-      });
-  };
-
+function Koszyk({cart, removeFromCart}) {
   return (
     <div>
-      <h1>Koszyk</h1>
-      {koszyk.map((produkt, index) => (
-        <div key={index}>
-          <h2>{produkt.nazwa}</h2>
-          <p>{produkt.opis}</p>
-        </div>
-      ))}
+      <h2>Koszyk</h2>
+      {cart.length === 0 ? (
+        <p>Koszyk jest pusty</p>
+      ) : (
+        cart.map(item => (
+          <div key={item.id}>
+            <h3>{item.name}</h3>
+            <p>Cena: {item.price}</p>
+            <button onClick={() => removeFromCart(item)}>Usuń</button>
+          </div>
+        ))
+      )}
     </div>
   );
 }
