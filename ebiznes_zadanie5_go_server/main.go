@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"fmt"
+	"github.com/rs/cors"
 )
 
 type Product struct {
@@ -29,9 +30,11 @@ func getProducts(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
-	http.HandleFunc("/api/products", getProducts)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/api/products", getProducts)
 	fmt.Println("Starting server")
-	err := http.ListenAndServe(":8080", nil)
+	handler := cors.Default().Handler(mux)
+	err := http.ListenAndServe(":8080", handler)	
 	if err != nil {
 		fmt.Println("Fatal Error")
 		log.Fatal(err)
